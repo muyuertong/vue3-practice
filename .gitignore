@@ -1,0 +1,13 @@
+tsbuild
+*.csproj.user
+.idea
+.DS_Store
+.vscode/settings.json
+lerna-debug.log
+dist
+.history
+node_modules
+version.json
+yarn-error.log
+package-lock.json
+yarn-error.log
