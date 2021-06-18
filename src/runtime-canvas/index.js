@@ -1,80 +1,28 @@
-import { createRenderer, createCommentVNode } from '@vue/runtime-core'
-import { Graphics, Text, Container, Sprite, Texture } from 'pixi.js'
+import { createRenderer } from '@vue/runtime-core'
+import nodeOps from './nodeOps'
+import patchProp from './patchProp'
 
-// 创建渲染器，实现渲染接口
-const renderer = createRenderer({
-    // 渲染圆
-    // createElement(type) {
-    //     let element
-    //     if (type === 'circle') {
-    //         element = new Graphics()
-    //         element.beginFill(0xff0000, 1)
-    //         element.drawCircle(0, 0, 100)
-    //         element.endFill()
-    //     }
-    //     return element
-    // },
-    // insert(el, parent) {
-    //     parent.addChild(el)
-    // },
-    // patchProp(el, key,preValue, nextValue) {
-    //     el[key] = nextValue
-    // },
-    
-    createElement(type) {
-        let element
-        switch(type) {
-            case 'Container':
-                element =  new Container()
-                break;
-            case 'Sprite':
-                element =  new Sprite()
-                break;
-        }
+/* 自定义canvas渲染操作选项 */
+const rendererOptions = {
+  patchProp,
+  ...nodeOps
+}
 
-        return element
-    },
-    // 插入元素
-    insert(el, parent) {
-        parent.addChild(el);
-    },
-    // 给元素设置属性
-    patchProp(el, key, preValue, nextValue) {
-        switch(key) {
-            case 'texture':
-                el.texture =  Texture.from(nextValue)
-                break;
-            case 'onClick':
-                el.on("pointertap", nextValue)
-                break;
-            default: 
-                el[key] = nextValue
-        }
-    },
-    // setElementText(node, text) {
-    //     const canvasText = new Text(text)
-    //     node.addChild(canvasText)
-    // },
-    // createText(text) {
-    //     return new Text(text)
-    // },
+// canvas 渲染器
+let renderer
 
-    // todo
-    // 处理注释
-    createComment() {},
-    // 获取父节点
-    parentNode() {},
-    // 获取兄弟节点
-    nextSibling() {},
-    // 删除节点
-    remove(el) {
-        const parent = el.parent
-        if (parent) {
-            parent.removeChild(el)
-        }
-    }
+function ensureRenderer() {
+  return renderer || (renderer = createRenderer(rendererOptions))
+}
+
+// console.log('renderer', renderer)
+
+export const render = ((...args) => {
+  ensureRenderer().render(...args)
 })
 
-export function createApp(rootComponent) {
-    return renderer.createApp(rootComponent)
+export const createApp = (...args) => {
+  const app = ensureRenderer().createApp(...args)
+  // console.log('app', app)
+  return app
 }

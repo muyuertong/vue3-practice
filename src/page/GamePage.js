@@ -1,153 +1,111 @@
+import { defineComponent, h, reactive, ref } from "@vue/runtime-core"
+import { Map, RestartBtn, Plane, Enemy, BulletEnemy, BulletSelf } from '../component' 
+import { PAGE } from '../page'
 import {
-    defineComponent,
-    h,
-    reactive,
-    toRefs,
-    onMounted,
-    onUnmounted
-} from "@vue/runtime-core"
-
-import Map from "../components/Map"
-import Plane from "../components/Plane";
-import Bullet from "../components/Bullet";
-import EnemyPlane from "../components/EnemyPlane";
-import { GameInstance } from "../game";
-import { hitTestRectangle } from "../utils/index";
+  handlePlaneShowUp,
+  handlePlaneMove,
+  handleEnemyShowUp,
+  handleEnemyMove,
+  selfBulletShoot,
+  selfBulletMove,
+  enemyBulletShoot,
+  enemyBulletMove,
+  detectGameOver,
+  config,
+} from '../game'
+import { handleKeydown } from '../utils'
+const { stageWidth, stageHeight, planeWidth, planeHeight } = config
 
 export default defineComponent({
-    setup(props, ctx) {
-        // 飞机
-        const planeInfo = createPlane()
-        // 子弹数据
-        const bullets = reactive([]);
+  setup(_, ctx) {
+    const score = ref(0)
+    useKeyboard(ctx)
+    const planeInfo = useCreatePlane()
+    const enemies = useCreateEnemies()
+    const selfBullets = reactive([])
+    const enemyBullets = reactive([])
+    useSelfAttack(planeInfo, selfBullets, enemies, score)
+    useEnemyAttack(enemies, enemyBullets, selfBullets, score)
+    useDetectGameOver(planeInfo, enemies, enemyBullets, ctx)
 
-        const handleAttack = (info) => {
-            const createBulletInfo = () => {
-                return {
-                    x: info.x + 100,
-                    y: info.y
-                }
-            }
-            bullets.push(createBulletInfo())
-        }
-
-        GameInstance.ticker.add(() => {
-            // 让子弹动起来
-            moveBullets(bullets)
-
-            //碰撞检测
-            enemyPlanes.forEach(enemyPlaneInfo => {
-                if (hitTestRectangle(enemyPlaneInfo, planeInfo)) {
-                    ctx.emit("changePage", "EndPage")
-                    console.log("hit");
-                }
-            })
-        })
-
-        // 敌军数据
-        const enemyPlanes = reactive([{
-            x: 10,
-            y: 10,
-            width: 308,
-            height: 207
-        }])
-
-        return {
-            planeInfo,
-            bullets,
-            handleAttack,
-            enemyPlanes
-        }
-    },
-    render(ctx) {
-        // 渲染子弹
-        const renderBullets = () => {
-            return ctx.bullets.map(info => {
-                return h(Bullet, {x: info.x, y:info.y})
-            })
-        }
-
-        // 渲染敌机
-        const renderEnemyPlanes = () => {
-            return ctx.enemyPlanes.map((info) => {
-                return h(EnemyPlane, { x: info.x, y: info.y });
-            })
-        }
-
-        return h('Container', [
-            h(Map),
-            h(Plane, {
-                x: ctx.planeInfo.x,
-                y: ctx.planeInfo.y,
-                onAttack: ctx.handleAttack,
-            }),
-            ...renderBullets(),
-            ...renderEnemyPlanes()
-        ])
+    return {
+      planeInfo,
+      enemies,
+      selfBullets,
+      enemyBullets,
+      score
     }
+  },
+  render(ctx) {
+    const renderItems = (list, component) => {
+      return list.map(({x, y}) => h(component, {x, y}))
+    }
+    return h('Container', [
+      h(Map),
+      h(Plane, { // 此处为传入子组件的props入口
+        x: ctx.planeInfo.x,
+        y: ctx.planeInfo.y,
+      }),
+      ...renderItems(ctx.enemies, Enemy),
+      ...renderItems(ctx.selfBullets, BulletSelf),
+      ...renderItems(ctx.enemyBullets, BulletEnemy),
+      h(RestartBtn, { x: 550, y: 10, width: 160, height: 50,
+        onClick() {
+          ctx.$emit('changePage', PAGE.RestartPage)
+        }
+      }),
+      h('circle', {
+        x: 600,
+        y: 1000,
+      }, [ctx.score])
+    ])
+  }
 })
 
-// reactive 处理对象类型 引用类型 {} []
-const createPlane = () => {
-    const planeInfo = reactive({
-    x: 150,
-    y: 300,
-    width: 258,
-    height: 364,
-  });
-
-  // 让飞机移动起来
-  const { x, y } = useMovePlane(planeInfo.x, planeInfo.y);
-  planeInfo.x = x;
-  planeInfo.y = y;
-
-  return planeInfo;
-};
-
-const useMovePlane = (initX, initY) => {
-  const speed = 15;
-  const point = reactive({
-    x: initX,
-    y: initY,
-  });
-
-  // 按键
-  // remove
-  // vue2 组件销毁的时候进行 remove
-  // 生命周期
-  const handleKeyDown = (e) => {
-    switch (e.code) {
-      case "ArrowUp":
-        point.y -= speed;
-        break;
-      case "ArrowDown":
-        point.y += speed;
-        break;
-      case "ArrowLeft":
-        point.x -= speed;
-        break;
-      case "ArrowRight":
-        point.x += speed;
-        break;
+const useKeyboard = (ctx) => {
+  handleKeydown({
+    Escape() {
+      ctx.emit('changePage', PAGE.StartPage)
     }
-  };
-
-  onMounted(() => {
-    // 组件创建完
-    window.addEventListener("keydown", handleKeyDown);
-  });
-
-  onUnmounted(() => {
-    // 组件销毁时
-    window.removeEventListener("keydown", handleKeyDown);
-  });
-
-  return toRefs(point);
+  })
 }
 
-const moveBullets = (bullets) => {
-    const speed = 5
-    bullets.forEach(item => {
-        item.y -= speed
-    })
+// 创建我方战机
+const useCreatePlane = () => {
+  const point = reactive({
+    x: stageWidth / 2 - planeWidth / 2,
+    y: stageHeight,
+    width: planeWidth,
+    height: planeHeight,
+  })
+  handlePlaneShowUp(point)
+  handlePlaneMove(point)
+  return point
+}
+
+// 创建敌机
+const useCreateEnemies = () => {
+  const enemies = reactive([])
+  handleEnemyShowUp(enemies)
+  handleEnemyMove(enemies)
+  return enemies;
+}
+
+// 我方子弹攻击
+const useSelfAttack = (plane, selfBullets, enemies, score) => {
+  selfBulletShoot(plane, selfBullets)
+  selfBulletMove(selfBullets, enemies, score)
+}
+
+// 敌方子弹攻击
+const useEnemyAttack = (enemies, enemyBullets, selfBullets, score) => {
+  enemyBulletShoot(enemies, enemyBullets)
+  enemyBulletMove(enemyBullets, selfBullets, score)
+}
+
+// 监测游戏结束 碰撞检测
+const useDetectGameOver = (plane, enemies, enemyBullets, ctx) => {
+  detectGameOver(plane, enemies, enemyBullets, () => {
+    ctx.emit('changePage', PAGE.RestartPage)
+  })
 }

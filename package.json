@@ -1,26 +1,34 @@
 {
-  "name": "vue3-practice",
+  "name": "plane-war",
   "version": "1.0.0",
-  "description": "",
+  "description": "Vue3+canvas 实现飞机大战小游戏",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "server": "webpack-dev-server --open"
+    "serve": "webpack-dev-server --open",
+    "deploy": "sh deploy.sh",
+    "lint": "echo \"for eslint\" && exit 0",
+    "test": "echo \"for test\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiaomiaoFanny/plane-war.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MiaomiaoFanny/plane-war/issues"
+  },
+  "homepage": "https://github.com/MiaomiaoFanny/plane-war#readme",
   "devDependencies": {
     "file-loader": "^6.0.0",
-    "vue-cli-plugin-vue-next": "~0.1.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@vue/runtime-core": "^3.0.0-beta.20",
-    "pixi.js": "^5.3.0",
-    "yarn": "^1.22.4"
+    "@vue/runtime-core": "^3.0.0-beta.19",
+    "pixi.js": "^5.3.0"
   }
 }

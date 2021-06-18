@@ -1,0 +1,23 @@
+module.exports = {
+  mapScrollSpeed: 5,
+  stageWidth: 750,
+  stageHeight: 1080,
+  bulletWidth: 61,
+  bulletHeight: 99,
+  planeWidth: 258,
+  planeHeight: 364,
+  enemyWidth: 308,
+  enemyHeight: 207,
+  MaxSelfBullet: 10,
+  MaxEnemyBullet: 50,
+  MaxEnemyPlane: 20,
+  enemyShowInterval: 1500,
+  enemyMaxAttacked: 2,
+  enemyMoveSpeedY: 0.3,
+  enemyMoveSpeedX: 0.3,
+  selfPlaneSpeed: 10,
+  selfBulletSpeed: 6,
+  enemyBulletSpeed: 6,
+  EnemyChangeDirInterval: 120,
+
+}
