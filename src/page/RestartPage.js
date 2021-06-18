@@ -1,6 +1,6 @@
 import { defineComponent, h } from "@vue/runtime-core";
 import RestartBtn from '../component/RestartBtn'
-import EndPageImg from '../../assets/end_page.jpg'
+import EndPageImg from '../../assets/end_page.jpeg'
 import { PAGE } from '../page'
 import { handleKeydown } from '../utils';
 

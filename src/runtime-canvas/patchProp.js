@@ -1,4 +1,4 @@
-import { Texture } from 'pixi.js'
+// import { Texture } from 'pixi.js'
 
 /* 属性更新操作 */
 
@@ -6,7 +6,7 @@ const patchProp = (el, key, preValue, nextValue) => {
   // console.log('[patchProp]', key, preValue, nextValue)
   switch (key) {
     case 'texture':
-      el.texture = Texture.from(nextValue)
+      el.texture = PIXI.Texture.from(nextValue)
       break;
     case 'onClick':
       el.on('pointertap', nextValue)

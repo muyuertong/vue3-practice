@@ -1,6 +1,3 @@
-/* 游戏逻辑 细节 */
-
-import * as PIXI from 'pixi.js'
 import { handleKeydown, handleKeyup, hittingDetect, addInterval, addTicker } from '../utils'
 import keyboardMovePlane, { isReachEdge } from './keyboardMovePlane'
 import moveBullets from './moveBullets'
@@ -176,7 +173,7 @@ export const enemyBulletMove = (enemyBullets, selfBullets, score) => {
   const detectDestroy = (bullet) => {
     return detectEnemyBulletTouchSelfBullets(bullet, selfBullets, score) // 检测碰撞
   }
-  addTicker(() => { moveBullets(enemyBullets, 1, enemyBulletSpeed, detectDestroy) })
+  addTicker(() => { moveBullets(enemyBullets, 0.5, enemyBulletSpeed, detectDestroy) })
 }
 
 export const detectGameOver = (plane, enemies, enemyBullets, gameover) => {

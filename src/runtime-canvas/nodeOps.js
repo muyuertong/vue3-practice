@@ -1,4 +1,4 @@
-import { Graphics, Text, Container, Sprite } from 'pixi.js'
+// import { Graphics, Text, Container, Sprite } from 'pixi.js'
 /* 基本操作: 创建元素, 设置文本... */
 
 export default {
@@ -7,13 +7,13 @@ export default {
     let element
     switch(tag) {
       case 'Container':
-        element = new Container()
+        element = new PIXI.Container()
         break
       case 'Sprite':
-        element = new Sprite()
+        element = new PIXI.Sprite()
         break
       case 'circle':
-        element = new Graphics()
+        element = new PIXI.Graphics()
         element.beginFill(0xffffff, 1)
         element.drawCircle(20, 20, 40)
         element.endFill()
@@ -23,7 +23,7 @@ export default {
     return element
   },
   createText(text) {
-    const canvasText = new Text(text)
+    const canvasText = new PIXI.Text(text)
     return canvasText
   },
   createComment(text) {
@@ -44,7 +44,7 @@ export default {
     node.text = text;
   },
   setElementText(el, text) {
-    const canvasText = new Text(text)
+    const canvasText = new PIXI.Text(text)
     el.addChild(canvasText)
   },
   parentNode(node){},

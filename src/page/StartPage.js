@@ -1,5 +1,5 @@
 import { defineComponent, h } from "@vue/runtime-core";
-import StartPageImg from '../../assets/start_page.jpg'
+import StartPageImg from '../../assets/start_page.jpeg'
 import StartBtn from '../component/StartBtn'
 import { PAGE } from '../page'
 import { handleKeydown } from '../utils';

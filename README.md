@@ -16,26 +16,26 @@ npm run build
 npm run serve
 ```
 
-3. 访问 http://localhost:8080 线上地址 [github飞机大战](https://miaomiaofanny.github.io/plane-war/) / [gitee飞机大战](https://fannia.gitee.io/plane-war/)
+3. 访问 http://localhost:8080 线上地址 [github 飞机大战](https://miaomiaofanny.github.io/plane-war/) / [gitee 飞机大战](https://fannia.gitee.io/plane-war/)
 
-## 目标: 在canvas上实现飞机大战
+## 目标: 在 canvas 上实现飞机大战
 
-1. 基于canvas的Custom Renderer实现
+1. 基于 canvas 的 Custom Renderer 实现
 2. canvas 使用 pixi.js
 
-目标具体化: Vue3结合pixi.js实现把图形绘制到canvas上
+目标具体化: Vue3 结合 pixi.js 实现把图形绘制到 canvas 上
 
 ## tasking
 
 - [x] 页面跳转
   - [x] 开始界面 StartPage
   - [x] 游戏界面 GamePage
-  - [X] 重新开始界面 RestartPage
+  - [x] 重新开始界面 RestartPage
 - [x] 背景滚动
 - [x] 我方飞机
   - [x] 键盘控制移动
   - [x] 发射子弹
-  - [x] 控制子弹数量 最多20
+  - [x] 控制子弹数量 最多 20
   - [x] 优化: 丝滑移动
   - [x] 优化: 缓动出场
   - [x] 优化: 顺滑出子弹 按住空格键不断出子弹
@@ -69,11 +69,11 @@ npm run serve
   - [x] 提出敌机移动逻辑
   - [x] 提出键盘控制本机移动逻辑
 - [ ] 测试
-- [x] 部署到git pages [参考文章](https://www.cnblogs.com/Marco-hui/p/12155936.html)
+- [x] 部署到 git pages [参考文章](https://www.cnblogs.com/Marco-hui/p/12155936.html)
 
 ## 游戏界面
 
-![StartPage](./assets/start_page.jpg)
+![StartPage](./assets/start_page.jpeg)
 
 ![GamePage](./assets/game_page.png)
 
